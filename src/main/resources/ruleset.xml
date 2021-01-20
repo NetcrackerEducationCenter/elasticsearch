@@ -9,17 +9,7 @@
     </description>
 
     <rule ref="category/java/bestpractices.xml"/>
-
-    <rule ref="rulesets/java/naming.xml"/>
-    <rule ref="rulesets/java/strings.xml"/>
-    <rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable" />
-    <rule ref="rulesets/java/imports.xml/DuplicateImports" />
-    <rule ref="rulesets/java/basic.xml/EmptyCatchBlock" />
-
-    <!-- Exclude WhileLoopsMustUseBraces, IfElseStmtsMustUseBraces -->
-    <rule ref="rulesets/java/braces.xml">
-        <exclude name="WhileLoopsMustUseBraces" />
-        <exclude name="IfElseStmtsMustUseBraces"/>
-    </rule>
+    <rule ref="category/java/codestyle.xml" />
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock" />
 
 </ruleset>
