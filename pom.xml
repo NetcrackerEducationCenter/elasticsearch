@@ -15,7 +15,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <url>https://github.com/NetcrackerEducationCenter/elasticsearch.git</url>
+    <url>https://github.com/NetcrackerEducationCenter/elasticsearch</url>
 
     <dependencies>
         <dependency>
