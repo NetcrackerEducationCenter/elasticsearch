@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Mikhail Savin
  */
 public class JiraIssueOperations {
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Current connection instance
@@ -58,7 +58,7 @@ public class JiraIssueOperations {
             IndexResponse indexResponse = connection.getRestHighLevelClient()
                     .index(indexRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
-            log.error(e);
+            LOG.error(e);
         }
     }
 
@@ -76,7 +76,7 @@ public class JiraIssueOperations {
             getResponse = connection.getRestHighLevelClient()
                     .get(getJiraIssuesRequest, RequestOptions.DEFAULT);
         } catch (ElasticsearchException | IOException e) {
-            log.error(e);
+            LOG.error(e);
             throw e;
         }
         if (getResponse.isExists()) {
@@ -97,7 +97,7 @@ public class JiraIssueOperations {
             DeleteResponse deleteResponse = connection.getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (java.io.IOException e){
-            log.error(e);
+            LOG.error(e);
         }
     }
 
@@ -118,7 +118,7 @@ public class JiraIssueOperations {
             UpdateResponse updateResponse = connection.getRestHighLevelClient()
                     .update(updateRequest, RequestOptions.DEFAULT);
         } catch (java.io.IOException e){
-            log.error(e);
+            LOG.error(e);
         }
     }
 }
