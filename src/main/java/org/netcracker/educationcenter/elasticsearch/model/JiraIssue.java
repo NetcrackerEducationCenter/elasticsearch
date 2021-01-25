@@ -34,6 +34,7 @@ public class JiraIssue {
 
     /**
      * Creates a new Jira-issue with given title and issue body.
+     * ID is randomly created using UUID
      *
      * @param issueTitle title of the Jira-issue
      * @param issueBody body of the Jira-issue
