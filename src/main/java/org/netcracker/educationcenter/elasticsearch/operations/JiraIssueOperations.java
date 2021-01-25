@@ -16,6 +16,7 @@ import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.model.JiraIssue;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,13 @@ import java.util.Map;
  *
  * @author Mikhail Savin
  */
-public class JiraIssueOperations {
+public class JiraIssueOperations{
     private static final Logger LOG = LogManager.getLogger();
+
+    /**
+     * Jira-issue model's index
+     */
+    private static final String INDEX = "jiraissues";
 
     /**
      * Current connection instance
@@ -52,7 +58,7 @@ public class JiraIssueOperations {
         jsonMap.put("jiraIssueTitle", jiraIssue.getIssueTitle());
         jsonMap.put("jiraIssueBody", jiraIssue.getIssueBody());
 
-        IndexRequest indexRequest = new IndexRequest("jiraissues")
+        IndexRequest indexRequest = new IndexRequest(INDEX)
                 .id(jiraIssue.getId()).source(jsonMap);
         try {
             IndexResponse indexResponse = connection.getRestHighLevelClient()
@@ -70,7 +76,7 @@ public class JiraIssueOperations {
      * @throws IOException if something wrong with get method
      */
     public String getJiraIssueById(String id) throws IOException {
-        GetRequest getJiraIssuesRequest = new GetRequest("jiraissues", id);
+        GetRequest getJiraIssuesRequest = new GetRequest(INDEX, id);
         GetResponse getResponse;
         try {
             getResponse = connection.getRestHighLevelClient()
@@ -92,7 +98,7 @@ public class JiraIssueOperations {
      * @param id actual Jira-issue id
      */
     public void deleteJiraIssueById(String id) {
-        DeleteRequest deleteRequest = new DeleteRequest("jiraissues", id);
+        DeleteRequest deleteRequest = new DeleteRequest(INDEX, id);
         try {
             DeleteResponse deleteResponse = connection.getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
@@ -110,9 +116,12 @@ public class JiraIssueOperations {
      */
     public void updateJiraIssueById(String id, JiraIssue jiraIssue, String reason) {
         Map<String, Object> jsonMap = new HashMap<>();
-        jsonMap.put("updated", jiraIssue);
+        jsonMap.put("jiraIssueId", jiraIssue.getId());
+        jsonMap.put("jiraIssueTitle", jiraIssue.getIssueTitle());
+        jsonMap.put("jiraIssueBody", jiraIssue.getIssueBody());
+        jsonMap.put("updated", new Date());
         jsonMap.put("reason", reason);
-        UpdateRequest updateRequest = new UpdateRequest("jiraissues", id)
+        UpdateRequest updateRequest = new UpdateRequest(INDEX, id)
                 .doc(jsonMap).fetchSource(true); // is fetchSource(true) really needed?
         try {
             UpdateResponse updateResponse = connection.getRestHighLevelClient()
