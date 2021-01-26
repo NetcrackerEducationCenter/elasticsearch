@@ -43,8 +43,7 @@ jobs:
     name: Build the Docker image
     needs: [build, artifact]
     steps:
-     - name: Execure build script
-       with:
-        script: |
-         docker build -t netcracker/education-center-elasticsearch:1.0
-         docker push netcracker/education-center-elasticsearch:1.0
+     - name: Build image
+       run: docker build -t netcracker/education-center-elasticsearch:1.0
+     - name: Push image to packages
+       run: docker push netcracker/education-center-elasticsearch:1.0
