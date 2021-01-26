@@ -34,7 +34,8 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish artifact on GitHub Packages
-        uses: mattdavis0351/actions/docker-gpr@v1
+        uses: VaultVulp/gp-docker-action@1.1.7
         with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           image-name: netcracker-learningcenter-elasticsearch
+          dockerfile: Dockerfile
