@@ -34,8 +34,17 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish artifact on GitHub Packages
-        uses: VaultVulp/gp-docker-action@1.1.7
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          image-name: netcracker-learningcenter-elasticsearch
-          dockerfile: Dockerfile
+        run: mvn -B clean deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build the Docker image
+    needs: [build, artifact]
+    steps:
+     - name: Execure build script
+       with:
+        script: |
+         docker build -t netcracker/education-center-elasticsearch:1.0
+        docker push netcracker/education-center-elasticsearch:1.0
