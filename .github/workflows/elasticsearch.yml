@@ -34,10 +34,15 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish artifact on GitHub Packages
-        uses: mattdavis0351/actions/docker-gpr@v1
+        uses: docker/build-push-action@v2
         with:
-          repo-token: ${{secrets.GITHUB_TOKEN}}
-          image-name: netcracker-learningcenter-elasticsearch
+          push: true
+          tags: netcracker/elasticsearch:latest
+          build-args: |
+            arg1=value1
+            arg2=value2
+      - name: Image digest
+        run: echo ${{steps.docker_build.outputs.digest}}
 
 #  docker:
 #    runs-on: ubuntu-latest
