@@ -34,14 +34,15 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish artifact on GitHub Packages
-        run: mvn -B clean deploy -DskipTests
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        uses: mattdavis0351/actions/docker-gpr@v1
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+          image-name: netcracker-learningcenter-elasticsearch
 
-#  deploy:
+#  docker:
 #    runs-on: ubuntu-latest
-#    name: Deploy Docker image to the Digital Ocean Droplet
-#    needs: build
+#    name: Publish image on Docker Hub
+#    needs: [build, artifact]
 #    steps:
 #      - uses: actions/checkout@v1
 #      - name: Set up JDK 1.8
