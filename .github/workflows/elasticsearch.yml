@@ -37,15 +37,3 @@ jobs:
         run: mvn -B clean deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  deploy:
-    runs-on: ubuntu-latest
-    name: Build the Docker image
-    needs: [build, artifact]
-    steps:
-     - name: Package app into a .jar
-       run: mvn clean package
-     - name: Build image
-       run: docker build -t netcracker/education-center-elasticsearch:1.0
-     - name: Push image to packages
-       run: docker push netcracker/education-center-elasticsearch:1.0
