@@ -47,4 +47,4 @@ jobs:
        with:
         script: |
          docker build -t netcracker/education-center-elasticsearch:1.0
-        docker push netcracker/education-center-elasticsearch:1.0
+         docker push netcracker/education-center-elasticsearch:1.0
