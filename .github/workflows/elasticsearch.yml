@@ -43,6 +43,8 @@ jobs:
     name: Build the Docker image
     needs: [build, artifact]
     steps:
+     - name: Package app into a .jar
+       run: mvn clean package
      - name: Build image
        run: docker build -t netcracker/education-center-elasticsearch:1.0
      - name: Push image to packages
