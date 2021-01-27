@@ -18,7 +18,7 @@ import org.netcracker.educationcenter.elasticsearch.Connection;
 import java.io.IOException;
 
 /**
- * Interface for Elasticsearch Database operations (Insert, Get, Delete, Update)
+ * Abstract class for Elasticsearch Database operations (Insert, Get, Delete, Update)
  *
  * @author Mikhail Savin
  */
