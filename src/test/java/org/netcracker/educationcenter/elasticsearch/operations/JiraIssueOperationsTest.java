@@ -4,7 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.netcracker.educationcenter.elasticsearch.Connection;
-import org.netcracker.educationcenter.elasticsearch.model.JiraIssue;
+import org.netcracker.educationcenter.elasticsearch.database.model.JiraIssue;
+import org.netcracker.educationcenter.elasticsearch.database.operations.JiraIssueOperations;
 
 import java.io.IOException;
 
@@ -52,13 +53,13 @@ public class JiraIssueOperationsTest {
     }
 
     @Test
-    public void insertJiraIssue_onlyOne() {
+    public void insertJiraIssue_onlyOne() throws IOException {
         JiraIssue jiraIssue = new JiraIssue("1","Unexpected behavior", "404 Error, Not Found");
         jiraIssueOperations.insertJiraIssue(jiraIssue);
     }
 
     @Test
-    public void deleteJiraIssue_onlyOne() {
+    public void deleteJiraIssue_onlyOne() throws IOException {
         JiraIssue jiraIssue = new JiraIssue("1","Unexpected behavior", "404 Error, Not Found");
         jiraIssueOperations.insertJiraIssue(jiraIssue);
         jiraIssueOperations.deleteJiraIssueById("1");
@@ -78,11 +79,11 @@ public class JiraIssueOperationsTest {
         System.out.print(jiraIssueOperations.getJiraIssueById("2"));
     }
     @Test
-    public void updateJiraIssueById_correctId(){
+    public void updateJiraIssueById_correctId() throws IOException {
         JiraIssue jiraIssue = new JiraIssue("1","Unexpected behavior", "404 Error, Not Found");
         jiraIssueOperations.insertJiraIssue(jiraIssue);
         JiraIssue updatedJiraIssue = new JiraIssue("1","Unexpected behavior",
                 "No errors now. Everything is fine");
-        jiraIssueOperations.updateJiraIssueById("1", updatedJiraIssue, "Issue status changed");
+        jiraIssueOperations.updateJiraIssueById("1", updatedJiraIssue);
     }
 }
