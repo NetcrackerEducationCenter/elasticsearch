@@ -28,7 +28,7 @@ public abstract class ElasticsearchOperations {
     /**
      * Current connection instance
      */
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * Constructor with given connection to interact with ES DB.
