@@ -9,6 +9,7 @@ import java.util.UUID;
  * @author Mikhail Savin
  */
 public class FTPFileObject {
+
     /**
      * ID of the FTP file object
      */

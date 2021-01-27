@@ -13,6 +13,7 @@ import java.io.IOException;
  * @author Mikhail Savin
  */
 public class Connection {
+
     /**
      * High-level client instance to establish connection
      */

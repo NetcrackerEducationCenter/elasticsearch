@@ -8,6 +8,7 @@ import java.util.UUID;
  * @author Mikhail Savin
  */
 public class JiraIssue {
+
     /**
      * ID of the Jira-issue
      */
