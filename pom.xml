@@ -70,7 +70,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                org.netcracker.educationcenter.elasticsearch.Main
+                                org.netcracker.educationcenter.elasticsearch.Application
                             </mainClass>
                         </manifest>
                     </archive>
