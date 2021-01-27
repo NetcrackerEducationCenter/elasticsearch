@@ -1,5 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
@@ -26,6 +27,11 @@ public abstract class ElasticsearchOperations {
     private static final Logger LOG = LogManager.getLogger();
 
     /**
+     * JSON object mapper
+     */
+    private ObjectMapper mapper;
+
+    /**
      * Current connection instance
      */
     private final Connection connection;
@@ -37,6 +43,21 @@ public abstract class ElasticsearchOperations {
      */
     public ElasticsearchOperations(Connection connection) {
         this.connection = connection;
+        this.mapper = new ObjectMapper();
+    }
+
+    /**
+     * @return JSON object mapper
+     */
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
+
+    /**
+     * @param mapper JSON object mapper to set
+     */
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
     }
 
     /**
@@ -63,19 +84,17 @@ public abstract class ElasticsearchOperations {
      * @param id searched JSON id
      * @param index searched JSON index
      * @return searched JSON as a String
-     * @throws IOException if something wrong with get method
      */
-    public String getById(String id, String index) throws IOException {
+    public String getById(String id, String index) {
         GetRequest getJiraIssuesRequest = new GetRequest(index, id);
-        GetResponse getResponse;
+        GetResponse getResponse = null;
         try {
             getResponse = connection.getRestHighLevelClient()
                     .get(getJiraIssuesRequest, RequestOptions.DEFAULT);
         } catch (ElasticsearchException | IOException e) {
             LOG.error(e);
-            throw e;
         }
-        if (getResponse.isExists()) {
+        if (getResponse != null && getResponse.isExists()) {
             return getResponse.getSourceAsString();
         } else {
             return "Document was not found";

@@ -1,7 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject;
 
@@ -35,8 +34,7 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      * @param ftpFileObject FTP file object to insert
      */
     public void insertFTPFileObject(FTPFileObject ftpFileObject) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(ftpFileObject);
+        String jsonString =getMapper().writeValueAsString(ftpFileObject);
         insert(jsonString, ftpFileObject.getId(), INDEX);
     }
 
@@ -45,9 +43,8 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      *
      * @param id searched FTP file object id
      * @return FTP file object as a String
-     * @throws IOException if something wrong with get method
      */
-    public String getFTPFileObjectById(String id) throws IOException {
+    public String getFTPFileObjectById(String id) {
         return getById(id, INDEX);
     }
 
@@ -67,8 +64,7 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      * @param ftpFileObject ftpFileObject instance with a new data
      */
     public void updateFTPFileObjectById(String id, FTPFileObject ftpFileObject) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(ftpFileObject);
+        String jsonString = getMapper().writeValueAsString(ftpFileObject);
         updateById(jsonString, id, INDEX);
     }
 }

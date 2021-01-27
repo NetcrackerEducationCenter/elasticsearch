@@ -1,9 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.model.JiraIssue;
 
@@ -37,8 +34,7 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      * @param jiraIssue Jira-issue to insert
      */
     public void insertJiraIssue(JiraIssue jiraIssue) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(jiraIssue);
+        String jsonString = getMapper().writeValueAsString(jiraIssue);
         insert(jsonString, jiraIssue.getId(), INDEX);
     }
 
@@ -47,9 +43,8 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      *
      * @param id searched Jira-issue id
      * @return Jira-issue as a String
-     * @throws IOException if something wrong with get method
      */
-    public String getJiraIssueById(String id) throws IOException {
+    public String getJiraIssueById(String id) {
         return getById(id, INDEX);
     }
 
@@ -69,8 +64,7 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      * @param jiraIssue jiraIssue instance with a new data
      */
     public void updateJiraIssueById(String id, JiraIssue jiraIssue) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(jiraIssue);
+        String jsonString = getMapper().writeValueAsString(jiraIssue);
         updateById(jsonString, id, INDEX);
     }
 }
