@@ -2,8 +2,6 @@ package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject;
 
@@ -15,8 +13,7 @@ import java.io.IOException;
  * @author Mikhail Savin
  * @see ElasticsearchOperations
  */
-public class FTPFileObjectOperations implements ElasticsearchOperations{
-    private static final Logger LOG = LogManager.getLogger();
+public class FTPFileObjectOperations extends ElasticsearchOperations {
 
     /**
      * FTP file object model's index
@@ -24,17 +21,12 @@ public class FTPFileObjectOperations implements ElasticsearchOperations{
     private static final String INDEX = "ftpfileobjects";
 
     /**
-     * Current connection instance
-     */
-    private static Connection connection;
-
-    /**
      * Creates a new FTPFileObjectOperations instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
     public FTPFileObjectOperations(Connection connection) {
-        FTPFileObjectOperations.connection = connection;
+        super(connection);
     }
 
     /**
@@ -45,7 +37,7 @@ public class FTPFileObjectOperations implements ElasticsearchOperations{
     public void insertFTPFileObject(FTPFileObject ftpFileObject) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(ftpFileObject);
-        insert(jsonString, ftpFileObject.getId(), INDEX, connection);
+        insert(jsonString, ftpFileObject.getId(), INDEX);
     }
 
     /**
@@ -56,7 +48,7 @@ public class FTPFileObjectOperations implements ElasticsearchOperations{
      * @throws IOException if something wrong with get method
      */
     public String getFTPFileObjectById(String id) throws IOException {
-        return getById(id, INDEX, connection);
+        return getById(id, INDEX);
     }
 
     /**
@@ -65,7 +57,7 @@ public class FTPFileObjectOperations implements ElasticsearchOperations{
      * @param id actual FTP file object id
      */
     public void deleteFTPFileObjectById(String id) {
-        deleteById(id, INDEX, connection);
+        deleteById(id, INDEX);
     }
 
     /**
@@ -77,6 +69,6 @@ public class FTPFileObjectOperations implements ElasticsearchOperations{
     public void updateFTPFileObjectById(String id, FTPFileObject ftpFileObject) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(ftpFileObject);
-        updateById(jsonString, id, INDEX, connection);
+        updateById(jsonString, id, INDEX);
     }
 }

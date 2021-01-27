@@ -15,8 +15,7 @@ import java.io.IOException;
  * @author Mikhail Savin
  * @see ElasticsearchOperations
  */
-public class JiraIssueOperations implements ElasticsearchOperations{
-    private static final Logger LOG = LogManager.getLogger();
+public class JiraIssueOperations extends ElasticsearchOperations {
 
     /**
      * Jira-issue model's index
@@ -24,17 +23,12 @@ public class JiraIssueOperations implements ElasticsearchOperations{
     private static final String INDEX = "jiraissues";
 
     /**
-     * Current connection instance
-     */
-    private static Connection connection;
-
-    /**
      * Creates a new JiraIssueOperations instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
     public JiraIssueOperations(Connection connection) {
-        JiraIssueOperations.connection = connection;
+        super(connection);
     }
 
     /**
@@ -45,7 +39,7 @@ public class JiraIssueOperations implements ElasticsearchOperations{
     public void insertJiraIssue(JiraIssue jiraIssue) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(jiraIssue);
-        insert(jsonString, jiraIssue.getId(), INDEX, connection);
+        insert(jsonString, jiraIssue.getId(), INDEX);
     }
 
     /**
@@ -56,7 +50,7 @@ public class JiraIssueOperations implements ElasticsearchOperations{
      * @throws IOException if something wrong with get method
      */
     public String getJiraIssueById(String id) throws IOException {
-        return getById(id, INDEX, connection);
+        return getById(id, INDEX);
     }
 
     /**
@@ -65,7 +59,7 @@ public class JiraIssueOperations implements ElasticsearchOperations{
      * @param id actual Jira-issue id
      */
     public void deleteJiraIssueById(String id) {
-        deleteById(id, INDEX, connection);
+        deleteById(id, INDEX);
     }
 
     /**
@@ -77,6 +71,6 @@ public class JiraIssueOperations implements ElasticsearchOperations{
     public void updateJiraIssueById(String id, JiraIssue jiraIssue) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(jiraIssue);
-        updateById(jsonString, id, INDEX, connection);
+        updateById(jsonString, id, INDEX);
     }
 }

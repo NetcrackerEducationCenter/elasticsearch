@@ -22,18 +22,31 @@ import java.io.IOException;
  *
  * @author Mikhail Savin
  */
-public interface ElasticsearchOperations {
-    Logger LOG = LogManager.getLogger();
+public abstract class ElasticsearchOperations {
+    private static final Logger LOG = LogManager.getLogger();
+
+    /**
+     * Current connection instance
+     */
+    private Connection connection;
+
+    /**
+     * Constructor with given connection to interact with ES DB.
+     *
+     * @param connection current connection
+     */
+    public ElasticsearchOperations(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Inserts given JSON String (with model) into the ES Database
      *
-     * @param jsonString JSON String of the insertable object
-     * @param id id of the insertable object
-     * @param index index of the insertable model
-     * @param connection current connection instance
+     * @param jsonString JSON String of the inserted object
+     * @param id id of the inserted object
+     * @param index index of the inserted model
      */
-    default void insert(String jsonString, String id, String index, Connection connection) {
+    public void insert(String jsonString, String id, String index) {
         IndexRequest indexRequest = new IndexRequest(index)
                 .id(id).source(jsonString, XContentType.JSON);
         try {
@@ -49,11 +62,10 @@ public interface ElasticsearchOperations {
      *
      * @param id searched JSON id
      * @param index searched JSON index
-     * @param connection current connection instance
      * @return searched JSON as a String
      * @throws IOException if something wrong with get method
      */
-    default String getById(String id, String index, Connection connection) throws IOException {
+    public String getById(String id, String index) throws IOException {
         GetRequest getJiraIssuesRequest = new GetRequest(index, id);
         GetResponse getResponse;
         try {
@@ -75,9 +87,8 @@ public interface ElasticsearchOperations {
      *
      * @param id actual object's JSON id
      * @param index index of the model
-     * @param connection current connection instance
      */
-    default void deleteById(String id, String index, Connection connection) {
+    public void deleteById(String id, String index) {
         DeleteRequest deleteRequest = new DeleteRequest(index, id);
         try {
             DeleteResponse deleteResponse = connection.getRestHighLevelClient()
@@ -93,9 +104,8 @@ public interface ElasticsearchOperations {
      * @param jsonString new JSON string with updated object info
      * @param id actual object's JSON id
      * @param index index of the model
-     * @param connection current connection instance
      */
-    default void updateById(String jsonString, String id, String index, Connection connection) {
+    public void updateById(String jsonString, String id, String index) {
         UpdateRequest updateRequest = new UpdateRequest(index, id)
                 .doc(jsonString, XContentType.JSON).fetchSource(true); // is fetchSource(true) really needed?
         try {
