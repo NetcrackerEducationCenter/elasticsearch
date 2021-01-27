@@ -49,7 +49,6 @@ public class Connection implements AutoCloseable {
      */
     public Connection() {
         loadProperties();
-        makeConnection();
     }
 
     /**
