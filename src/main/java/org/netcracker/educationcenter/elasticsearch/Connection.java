@@ -66,11 +66,11 @@ public class Connection implements AutoCloseable {
         Properties properties = new Properties();
 
         try {
-            properties.load(new FileInputStream("/src/main/resources/connection.properties"));
+            properties.load(new FileInputStream("src/main/resources/connection.properties"));
             hostname = properties.getProperty("hostname");
             scheme = properties.getProperty("scheme");
-            port1 = Integer.getInteger(properties.getProperty("port1"));
-            port2 = Integer.getInteger(properties.getProperty("port2"));
+            port1 = Integer.parseInt(properties.getProperty("port1"));
+            port2 = Integer.parseInt(properties.getProperty("port2"));
         } catch (IOException e) {
             LOG.error(e);
         }
