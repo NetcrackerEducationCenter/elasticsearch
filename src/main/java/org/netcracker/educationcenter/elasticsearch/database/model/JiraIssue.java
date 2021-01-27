@@ -1,4 +1,4 @@
-package org.netcracker.educationcenter.elasticsearch.model;
+package org.netcracker.educationcenter.elasticsearch.database.model;
 
 import java.util.UUID;
 

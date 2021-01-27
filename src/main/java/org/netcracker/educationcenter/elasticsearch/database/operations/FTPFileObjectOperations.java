@@ -1,11 +1,11 @@
-package org.netcracker.educationcenter.elasticsearch.operations;
+package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
-import org.netcracker.educationcenter.elasticsearch.model.FTPFileObject;
+import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject;
 
 import java.io.IOException;
 

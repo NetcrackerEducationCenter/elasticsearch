@@ -1,4 +1,4 @@
-package org.netcracker.educationcenter.elasticsearch.operations;
+package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
