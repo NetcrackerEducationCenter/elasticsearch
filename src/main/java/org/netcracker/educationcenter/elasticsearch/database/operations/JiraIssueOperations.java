@@ -1,10 +1,10 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.model.JiraIssue;
-
-import java.io.IOException;
 
 /**
  * This class implements Elasticsearch Database operations with (on) Jira-issues
@@ -13,6 +13,7 @@ import java.io.IOException;
  * @see ElasticsearchOperations
  */
 public class JiraIssueOperations extends ElasticsearchOperations {
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Jira-issue model's index
@@ -33,9 +34,14 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      *
      * @param jiraIssue Jira-issue to insert
      */
-    public void insertJiraIssue(JiraIssue jiraIssue) throws IOException {
-        String jsonString = getMapper().writeValueAsString(jiraIssue);
-        insert(jsonString, jiraIssue.getId(), INDEX);
+    public void insertJiraIssue(JiraIssue jiraIssue) {
+        try {
+            String jsonString = getMapper().writeValueAsString(jiraIssue);
+            insert(jsonString, jiraIssue.getId(), INDEX);
+        } catch (JsonProcessingException e) {
+            LOG.error(e);
+        }
+
     }
 
     /**
@@ -63,8 +69,12 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      * @param id actual Jira-issue id
      * @param jiraIssue jiraIssue instance with a new data
      */
-    public void updateJiraIssueById(String id, JiraIssue jiraIssue) throws JsonProcessingException {
-        String jsonString = getMapper().writeValueAsString(jiraIssue);
-        updateById(jsonString, id, INDEX);
+    public void updateJiraIssueById(String id, JiraIssue jiraIssue) {
+        try {
+            String jsonString = getMapper().writeValueAsString(jiraIssue);
+            updateById(jsonString, id, INDEX);
+        } catch (JsonProcessingException e) {
+            LOG.error(e);
+        }
     }
 }

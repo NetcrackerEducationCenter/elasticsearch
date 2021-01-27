@@ -1,10 +1,10 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject;
-
-import java.io.IOException;
 
 /**
  * This class implements Elasticsearch Database operations with (on) FTP file objects
@@ -13,6 +13,7 @@ import java.io.IOException;
  * @see ElasticsearchOperations
  */
 public class FTPFileObjectOperations extends ElasticsearchOperations {
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * FTP file object model's index
@@ -33,9 +34,14 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      *
      * @param ftpFileObject FTP file object to insert
      */
-    public void insertFTPFileObject(FTPFileObject ftpFileObject) throws JsonProcessingException {
-        String jsonString =getMapper().writeValueAsString(ftpFileObject);
-        insert(jsonString, ftpFileObject.getId(), INDEX);
+    public void insertFTPFileObject(FTPFileObject ftpFileObject) {
+        try {
+            String jsonString =getMapper().writeValueAsString(ftpFileObject);
+            insert(jsonString, ftpFileObject.getId(), INDEX);
+        } catch (JsonProcessingException e) {
+            LOG.error(e);
+        }
+
     }
 
     /**
@@ -63,8 +69,13 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      * @param id actual FTP file object id
      * @param ftpFileObject ftpFileObject instance with a new data
      */
-    public void updateFTPFileObjectById(String id, FTPFileObject ftpFileObject) throws JsonProcessingException {
-        String jsonString = getMapper().writeValueAsString(ftpFileObject);
-        updateById(jsonString, id, INDEX);
+    public void updateFTPFileObjectById(String id, FTPFileObject ftpFileObject) {
+        try {
+            String jsonString = getMapper().writeValueAsString(ftpFileObject);
+            updateById(jsonString, id, INDEX);
+        } catch (JsonProcessingException e) {
+            LOG.error(e);
+        }
+
     }
 }
