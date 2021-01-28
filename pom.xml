@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.netcracker.learningcenter</groupId>
+    <groupId>org.netcracker.learning-center</groupId>
     <artifactId>elasticsearch</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
@@ -16,13 +16,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <url>https://github.com/NetcrackerEducationCenter/elasticsearch</url>
+    <url>https://github.com/netcracker-education-center/elasticsearch</url>
 
     <distributionManagement>
         <repository>
             <id>github</id>
             <name>Elasticsearch service for collect-and-search project</name>
-            <url>https://maven.pkg.github.com/NetcrackerEducationCenter/elasticsearch </url>
+            <url>https://maven.pkg.github.com/netcracker-education-center/elasticsearch </url>
         </repository>
     </distributionManagement>
 
