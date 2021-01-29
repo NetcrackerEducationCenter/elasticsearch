@@ -54,13 +54,6 @@ public abstract class ElasticsearchOperations {
     }
 
     /**
-     * @param mapper JSON object mapper to set
-     */
-    public void setMapper(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
-
-    /**
      * Inserts given JSON String (with model) into the ES Database
      *
      * @param jsonString JSON String of the inserted object
