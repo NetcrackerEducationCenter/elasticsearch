@@ -65,8 +65,8 @@ public class Connection implements AutoCloseable {
     private void loadProperties() {
         Properties properties = new Properties();
 
-        try {
-            properties.load(new FileInputStream("src/main/resources/connection.properties"));
+        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/connection.properties")) {
+            properties.load(fileInputStream);
             hostname = properties.getProperty("hostname");
             scheme = properties.getProperty("scheme");
             port1 = Integer.parseInt(properties.getProperty("port1"));
