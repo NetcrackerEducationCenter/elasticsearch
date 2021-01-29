@@ -74,7 +74,6 @@ public class Connection implements AutoCloseable {
         } catch (IOException e) {
             LOG.error(e);
         }
-
     }
 
     /**
