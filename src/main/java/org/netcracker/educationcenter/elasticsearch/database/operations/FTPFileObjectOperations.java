@@ -36,7 +36,7 @@ public class FTPFileObjectOperations extends ElasticsearchOperations {
      */
     public void insertFTPFileObject(FTPFileObject ftpFileObject) {
         try {
-            String jsonString =getMapper().writeValueAsString(ftpFileObject);
+            String jsonString = getMapper().writeValueAsString(ftpFileObject);
             insert(jsonString, ftpFileObject.getId(), INDEX);
         } catch (JsonProcessingException e) {
             LOG.error(e);
