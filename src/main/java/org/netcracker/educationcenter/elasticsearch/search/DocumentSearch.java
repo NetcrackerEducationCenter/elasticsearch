@@ -11,8 +11,11 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.netcracker.educationcenter.elasticsearch.Connection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +49,15 @@ public abstract class DocumentSearch {
      * @param text the query text (to be analyzed).
      * @return list of JSON-Strings (suitable objects)
      */
-    protected List<String> search(String index, String name, String text) {
+    public List<String> search(String index, String name, String text) {
         List<String> searchHitList = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
-                .fuzziness(Fuzziness.AUTO)
-                .maxExpansions(10);
-        searchSourceBuilder.query(matchQueryBuilder);
+                .fuzziness(Fuzziness.AUTO);
+                //.prefixLength(1)
+                //.maxExpansions(10);
+        searchSourceBuilder.query(matchQueryBuilder).sort(new ScoreSortBuilder().order(SortOrder.DESC));
         searchRequest.source(searchSourceBuilder);
 
         try {
@@ -62,8 +66,9 @@ public abstract class DocumentSearch {
             SearchHits searchHits = searchResponse.getHits();
             for (SearchHit hit : searchHits) {
                 searchHitList.add(hit.getSourceAsString());
+                System.out.println(hit.getScore());
             }
-        } catch (java.io.IOException e){
+        } catch (IOException e){
             LOG.error(e);
         }
         return searchHitList;
