@@ -1,10 +1,9 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
-import org.netcracker.educationcenter.elasticsearch.database.model.JiraIssue;
 
 /**
  * This class implements Elasticsearch Database operations with (on) Jira-issues
@@ -12,13 +11,18 @@ import org.netcracker.educationcenter.elasticsearch.database.model.JiraIssue;
  * @author Mikhail Savin
  * @see ElasticsearchOperations
  */
-public class JiraIssueOperations extends ElasticsearchOperations {
+public class JiraIssueOperations implements ElasticsearchOperations {
     private static final Logger LOG = LogManager.getLogger();
 
     /**
-     * Jira-issue model's index
+     * Current connection instance
      */
-    private static final String INDEX = "jiraissues";
+    private final Connection connection;
+
+    /**
+     * JSON object mapper
+     */
+    private ObjectMapper mapper;
 
     /**
      * Creates a new JiraIssueOperations instance with given connection to interact with ES DB.
@@ -26,55 +30,31 @@ public class JiraIssueOperations extends ElasticsearchOperations {
      * @param connection current connection
      */
     public JiraIssueOperations(Connection connection) {
-        super(connection);
+        this.mapper = new ObjectMapper();
+        this.connection = connection;
     }
 
     /**
-     * Inserts given Jira-issue into the ES Database
-     *
-     * @param jiraIssue Jira-issue to insert
+     * @return current logger instance
      */
-    public void insertJiraIssue(JiraIssue jiraIssue) {
-        try {
-            String jsonString = getMapper().writeValueAsString(jiraIssue);
-            insert(jsonString, jiraIssue.getId(), INDEX);
-        } catch (JsonProcessingException e) {
-            LOG.error(e);
-        }
-
+    @Override
+    public Logger getLogger() {
+        return LOG;
     }
 
     /**
-     * Gets Jira-issue by its id
-     *
-     * @param id searched Jira-issue id
-     * @return Jira-issue as a String
+     * @return JSON object mapper
      */
-    public String getJiraIssueById(String id) {
-        return getById(id, INDEX);
+    @Override
+    public ObjectMapper getMapper() {
+        return mapper;
     }
 
     /**
-     * Deletes Jira-issue by its id
-     *
-     * @param id actual Jira-issue id
+     * @return current connection instance
      */
-    public void deleteJiraIssueById(String id) {
-        deleteById(id, INDEX);
-    }
-
-    /**
-     * Updates Jira-issue by its id
-     *
-     * @param id actual Jira-issue id
-     * @param jiraIssue jiraIssue instance with a new data
-     */
-    public void updateJiraIssueById(String id, JiraIssue jiraIssue) {
-        try {
-            String jsonString = getMapper().writeValueAsString(jiraIssue);
-            updateById(jsonString, id, INDEX);
-        } catch (JsonProcessingException e) {
-            LOG.error(e);
-        }
+    @Override
+    public Connection getConnection() {
+        return connection;
     }
 }
