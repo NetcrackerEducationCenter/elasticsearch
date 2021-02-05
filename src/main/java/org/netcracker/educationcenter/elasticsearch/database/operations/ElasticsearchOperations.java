@@ -1,7 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -19,73 +18,61 @@ import org.netcracker.educationcenter.elasticsearch.Connection;
 import java.io.IOException;
 
 /**
- * Abstract class for Elasticsearch Database operations (Insert, Get, Delete, Update)
+ * Interface for Elasticsearch Database operations (Insert, Get, Delete, Update)
  *
  * @author Mikhail Savin
  */
-public abstract class ElasticsearchOperations {
-    private static final Logger LOG = LogManager.getLogger();
+public interface ElasticsearchOperations {
 
     /**
-     * JSON object mapper
+     * @return current logger instance
      */
-    private ObjectMapper mapper;
-
-    /**
-     * Current connection instance
-     */
-    private final Connection connection;
-
-    /**
-     * Constructor with given connection to interact with ES DB.
-     *
-     * @param connection current connection
-     */
-    public ElasticsearchOperations(Connection connection) {
-        this.connection = connection;
-        this.mapper = new ObjectMapper();
-    }
+    Logger getLogger();
 
     /**
      * @return JSON object mapper
      */
-    public ObjectMapper getMapper() {
-        return mapper;
-    }
+    ObjectMapper getMapper();
 
     /**
-     * Inserts given JSON String (with model) into the ES Database
-     *
-     * @param jsonString JSON String of the inserted object
-     * @param id id of the inserted object
-     * @param index index of the inserted model
+     * @return current connection instance
      */
-    public void insert(String jsonString, String id, String index) {
-        IndexRequest indexRequest = new IndexRequest(index)
-                .id(id).source(jsonString, XContentType.JSON);
+    Connection getConnection();
+
+    /**
+     * Inserts given object (model) into the ES Database
+     *
+     * @param object object to insert
+     * @param index index of the inserted model
+     * @param id id of the inserted object
+     */
+    default void insert(Object object, String index, String id) {
         try {
-            IndexResponse indexResponse = connection.getRestHighLevelClient()
+            String jsonString = getMapper().writeValueAsString(object);
+            IndexRequest indexRequest = new IndexRequest(index)
+                    .id(id).source(jsonString, XContentType.JSON);
+            IndexResponse indexResponse = getConnection().getRestHighLevelClient()
                     .index(indexRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
-            LOG.error(e);
+            getLogger().error(e);
         }
     }
 
     /**
      * Gets model's JSON as a String by its id and index.
      *
-     * @param id searched JSON id
      * @param index searched JSON index
+     * @param id searched JSON id
      * @return searched JSON as a String
      */
-    public String getById(String id, String index) {
-        GetRequest getJiraIssuesRequest = new GetRequest(index, id);
+    default String getById(String index, String id) {
+        GetRequest getRequest = new GetRequest(index, id);
         GetResponse getResponse = null;
         try {
-            getResponse = connection.getRestHighLevelClient()
-                    .get(getJiraIssuesRequest, RequestOptions.DEFAULT);
+            getResponse = getConnection().getRestHighLevelClient()
+                    .get(getRequest, RequestOptions.DEFAULT);
         } catch (ElasticsearchException | IOException e) {
-            LOG.error(e);
+            getLogger().error(e);
         }
         if (getResponse != null && getResponse.isExists()) {
             return getResponse.getSourceAsString();
@@ -95,36 +82,37 @@ public abstract class ElasticsearchOperations {
     }
 
     /**
-     * Deletes object in ES database by its id and index
+     * Deletes object in ES database by its index and id
      *
-     * @param id actual object's JSON id
      * @param index index of the model
+     * @param id actual object's id
      */
-    public void deleteById(String id, String index) {
+    default void deleteById(String index, String id) {
         DeleteRequest deleteRequest = new DeleteRequest(index, id);
         try {
-            DeleteResponse deleteResponse = connection.getRestHighLevelClient()
+            DeleteResponse deleteResponse = getConnection().getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
-        } catch (java.io.IOException e){
-            LOG.error(e);
+        } catch (IOException e){
+            getLogger().error(e);
         }
     }
 
     /**
-     * Updates JSON by its id
+     * Updates document by its id with given index and object (with a new data)
      *
-     * @param jsonString new JSON string with updated object info
-     * @param id actual object's JSON id
+     * @param object object (model) to update
      * @param index index of the model
+     * @param id actual object's (model's) id
      */
-    public void updateById(String jsonString, String id, String index) {
-        UpdateRequest updateRequest = new UpdateRequest(index, id)
-                .doc(jsonString, XContentType.JSON).fetchSource(true); // is fetchSource(true) really needed?
+    default void updateById(Object object, String index, String id) {
         try {
-            UpdateResponse updateResponse = connection.getRestHighLevelClient()
+            String jsonString = getMapper().writeValueAsString(object);
+            UpdateRequest updateRequest = new UpdateRequest(index, id)
+                    .doc(jsonString, XContentType.JSON).fetchSource(true); // is fetchSource(true) really needed?
+            UpdateResponse updateResponse = getConnection().getRestHighLevelClient()
                     .update(updateRequest, RequestOptions.DEFAULT);
-        } catch (java.io.IOException e){
-            LOG.error(e);
+        } catch (IOException e){
+            getLogger().error(e);
         }
     }
 }

@@ -1,10 +1,9 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
-import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject;
 
 /**
  * This class implements Elasticsearch Database operations with (on) FTP file objects
@@ -12,70 +11,50 @@ import org.netcracker.educationcenter.elasticsearch.database.model.FTPFileObject
  * @author Mikhail Savin
  * @see ElasticsearchOperations
  */
-public class FTPFileObjectOperations extends ElasticsearchOperations {
+public class FTPFileObjectOperations implements ElasticsearchOperations {
     private static final Logger LOG = LogManager.getLogger();
 
     /**
-     * FTP file object model's index
+     * Current connection instance
      */
-    private static final String INDEX = "ftpfileobjects";
+    private final Connection connection;
 
     /**
-     * Creates a new FTPFileObjectOperations instance with given connection to interact with ES DB.
+     * JSON object mapper
+     */
+    private ObjectMapper mapper;
+
+    /**
+     * Creates a new JiraIssueOperations instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
     public FTPFileObjectOperations(Connection connection) {
-        super(connection);
+        this.mapper = new ObjectMapper();
+        this.connection = connection;
     }
 
     /**
-     * Inserts given FTP file object into the ES Database
-     *
-     * @param ftpFileObject FTP file object to insert
+     * @return current logger instance
      */
-    public void insertFTPFileObject(FTPFileObject ftpFileObject) {
-        try {
-            String jsonString = getMapper().writeValueAsString(ftpFileObject);
-            insert(jsonString, ftpFileObject.getId(), INDEX);
-        } catch (JsonProcessingException e) {
-            LOG.error(e);
-        }
-
+    @Override
+    public Logger getLogger() {
+        return LOG;
     }
 
     /**
-     * Gets FTP file object by its id
-     *
-     * @param id searched FTP file object id
-     * @return FTP file object as a String
+     * @return JSON object mapper
      */
-    public String getFTPFileObjectById(String id) {
-        return getById(id, INDEX);
+    @Override
+    public ObjectMapper getMapper() {
+        return mapper;
     }
 
     /**
-     * Deletes FTP file object by its id
-     *
-     * @param id actual FTP file object id
+     * @return current connection instance
      */
-    public void deleteFTPFileObjectById(String id) {
-        deleteById(id, INDEX);
-    }
-
-    /**
-     * Updates FTP file object by its id
-     *
-     * @param id actual FTP file object id
-     * @param ftpFileObject ftpFileObject instance with a new data
-     */
-    public void updateFTPFileObjectById(String id, FTPFileObject ftpFileObject) {
-        try {
-            String jsonString = getMapper().writeValueAsString(ftpFileObject);
-            updateById(jsonString, id, INDEX);
-        } catch (JsonProcessingException e) {
-            LOG.error(e);
-        }
-
+    @Override
+    public Connection getConnection() {
+        return connection;
     }
 }
