@@ -15,5 +15,5 @@ public final class DatabaseConstants {
     /**
      * FTP file object model's index
      */
-    private static final String FTP_FILE_OBJECTS_INDEX = "ftpfileobjects";
+    public static final String FTP_FILE_OBJECTS_INDEX = "ftpfileobjects";
 }
