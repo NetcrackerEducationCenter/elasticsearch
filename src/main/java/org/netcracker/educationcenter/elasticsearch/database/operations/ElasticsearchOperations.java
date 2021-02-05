@@ -40,16 +40,20 @@ public interface ElasticsearchOperations {
     Connection getConnection();
 
     /**
+     * @return index of the sought object
+     */
+    String getIndex();
+
+    /**
      * Inserts given object (model) into the ES Database
      *
      * @param object object to insert
-     * @param index index of the inserted model
      * @param id id of the inserted object
      */
-    default void insert(Object object, String index, String id) {
+    default void insert(Object object, String id) {
         try {
             String jsonString = getMapper().writeValueAsString(object);
-            IndexRequest indexRequest = new IndexRequest(index)
+            IndexRequest indexRequest = new IndexRequest(getIndex())
                     .id(id).source(jsonString, XContentType.JSON);
             IndexResponse indexResponse = getConnection().getRestHighLevelClient()
                     .index(indexRequest, RequestOptions.DEFAULT);
@@ -59,14 +63,13 @@ public interface ElasticsearchOperations {
     }
 
     /**
-     * Gets model's JSON as a String by its id and index.
+     * Gets model's JSON as a String by its id.
      *
-     * @param index searched JSON index
      * @param id searched JSON id
      * @return searched JSON as a String
      */
-    default String getById(String index, String id) {
-        GetRequest getRequest = new GetRequest(index, id);
+    default String getById(String id) {
+        GetRequest getRequest = new GetRequest(getIndex(), id);
         GetResponse getResponse = null;
         try {
             getResponse = getConnection().getRestHighLevelClient()
@@ -82,13 +85,12 @@ public interface ElasticsearchOperations {
     }
 
     /**
-     * Deletes object in ES database by its index and id
+     * Deletes object in ES database by its id
      *
-     * @param index index of the model
      * @param id actual object's id
      */
-    default void deleteById(String index, String id) {
-        DeleteRequest deleteRequest = new DeleteRequest(index, id);
+    default void deleteById(String id) {
+        DeleteRequest deleteRequest = new DeleteRequest(getIndex(), id);
         try {
             DeleteResponse deleteResponse = getConnection().getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
@@ -98,16 +100,15 @@ public interface ElasticsearchOperations {
     }
 
     /**
-     * Updates document by its id with given index and object (with a new data)
+     * Updates document by its id with given object (with a new data)
      *
      * @param object object (model) to update
-     * @param index index of the model
      * @param id actual object's (model's) id
      */
-    default void updateById(Object object, String index, String id) {
+    default void updateById(Object object, String id) {
         try {
             String jsonString = getMapper().writeValueAsString(object);
-            UpdateRequest updateRequest = new UpdateRequest(index, id)
+            UpdateRequest updateRequest = new UpdateRequest(getIndex(), id)
                     .doc(jsonString, XContentType.JSON).fetchSource(true); // is fetchSource(true) really needed?
             UpdateResponse updateResponse = getConnection().getRestHighLevelClient()
                     .update(updateRequest, RequestOptions.DEFAULT);
