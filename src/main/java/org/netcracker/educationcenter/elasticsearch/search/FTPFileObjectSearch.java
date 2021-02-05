@@ -1,8 +1,9 @@
 package org.netcracker.educationcenter.elasticsearch.search;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
-
-import java.util.List;
+import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
  * This class implements Elasticsearch search on FTP file objects
@@ -10,12 +11,13 @@ import java.util.List;
  * @author Mikhail Savin
  * @see DocumentSearch
  */
-public class FTPFileObjectSearch extends DocumentSearch{
+public class FTPFileObjectSearch implements DocumentSearch {
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
-     * FTP file object model's index
+     * Current connection instance
      */
-    private static final String INDEX = "ftpfileobjects";
+    private final Connection connection;
 
     /**
      * Creates a new FTPFileObjectSearch instance with given connection to interact with ES DB.
@@ -23,17 +25,30 @@ public class FTPFileObjectSearch extends DocumentSearch{
      * @param connection current connection
      */
     public FTPFileObjectSearch(Connection connection) {
-        super(connection);
+        this.connection = connection;
     }
 
     /**
-     * This method searches for all matching FTP file objects
-     *
-     * @param name the field name of FTPFileObject (e.g. text, modificationDate)
-     * @param text the text of the field to be analyzed
-     * @return list of JSON-Strings (suitable objects)
+     * @return current logger instance
      */
-    public List<String> searchForFTPFileObjects(String name, String text) {
-        return search(INDEX, name, text);
+    @Override
+    public Logger getLogger() {
+        return LOG;
+    }
+
+    /**
+     * @return current connection instance
+     */
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
+
+    /**
+     * @return FTP file object model's index
+     */
+    @Override
+    public String getIndex() {
+        return DatabaseConstants.FTP_FILE_OBJECTS_INDEX;
     }
 }

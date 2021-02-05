@@ -1,6 +1,5 @@
 package org.netcracker.educationcenter.elasticsearch.search;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -20,38 +19,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract class for Elasticsearch Database search
+ * Interface for Elasticsearch Database search
  *
  * @author Mikhail Savin
  */
-public abstract class DocumentSearch {
-    private static final Logger LOG = LogManager.getLogger();
+public interface DocumentSearch {
 
     /**
-     * Current connection instance
+     * @return current logger instance
      */
-    private final Connection connection;
+    Logger getLogger();
 
     /**
-     * Constructor with given connection to interact with ES DB.
-     *
-     * @param connection current connection
+     * @return current connection instance
      */
-    public DocumentSearch(Connection connection) {
-        this.connection = connection;
-    }
+    Connection getConnection();
+
+    /**
+     * @return index of the sought object
+     */
+    String getIndex();
 
     /**
      * Searches all matching objects by index and field name which satisfy the text search
      *
-     * @param index the index in which to search for results
      * @param name the field name.
      * @param text the query text (to be analyzed).
      * @return list of JSON-Strings (suitable objects)
      */
-    public List<String> search(String index, String name, String text) {
+    default List<String> search(String name, String text) {
         List<String> searchHitList = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest(index);
+        SearchRequest searchRequest = new SearchRequest(getIndex());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
                 .fuzziness(Fuzziness.AUTO);
@@ -61,7 +59,7 @@ public abstract class DocumentSearch {
         searchRequest.source(searchSourceBuilder);
 
         try {
-            SearchResponse searchResponse = connection.getRestHighLevelClient()
+            SearchResponse searchResponse = getConnection().getRestHighLevelClient()
                     .search(searchRequest, RequestOptions.DEFAULT);
             SearchHits searchHits = searchResponse.getHits();
             for (SearchHit hit : searchHits) {
@@ -69,7 +67,7 @@ public abstract class DocumentSearch {
                 System.out.println(hit.getScore());
             }
         } catch (IOException e){
-            LOG.error(e);
+            getLogger().error(e);
         }
         return searchHitList;
     }
