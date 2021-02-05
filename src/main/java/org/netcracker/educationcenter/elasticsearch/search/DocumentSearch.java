@@ -74,6 +74,15 @@ public interface DocumentSearch {
         return searchHitList;
     }
 
+    /**
+     * This method implements Elasticsearch multiSearch API.
+     * It allows to execute multiple search requests in a single http request in parallel.
+     * It should be noted that unlike the search() method, multiSearch() method's signature
+     * has only one parameter which is represented as a map of text and field name.
+     *
+     * @param textAndName map of text to analyze and its corresponding field name.
+     * @return list of JSON-Strings (suitable objects). It contains the results of all requests
+     */
     default List<String> multiSearch(Map<String, String> textAndName) {
         MultiSearchRequest request = new MultiSearchRequest();
 
