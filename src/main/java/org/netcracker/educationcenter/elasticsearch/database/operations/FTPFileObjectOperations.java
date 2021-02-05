@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.netcracker.educationcenter.elasticsearch.Connection;
+import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
  * This class implements Elasticsearch Database operations with (on) FTP file objects
@@ -56,5 +57,13 @@ public class FTPFileObjectOperations implements ElasticsearchOperations {
     @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    /**
+     * @return FTP file object model's index
+     */
+    @Override
+    public String getIndex() {
+        return DatabaseConstants.FTP_FILE_OBJECTS_INDEX;
     }
 }
