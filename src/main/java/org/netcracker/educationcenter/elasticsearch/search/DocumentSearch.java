@@ -1,6 +1,8 @@
 package org.netcracker.educationcenter.elasticsearch.search;
 
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.search.MultiSearchRequest;
+import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -17,6 +19,7 @@ import org.netcracker.educationcenter.elasticsearch.Connection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for Elasticsearch Database search
@@ -43,11 +46,11 @@ public interface DocumentSearch {
     /**
      * Searches all matching objects by index and field name which satisfy the text search
      *
-     * @param name the field name.
      * @param text the query text (to be analyzed).
+     * @param name the field name.
      * @return list of JSON-Strings (suitable objects)
      */
-    default List<String> search(String name, String text) {
+    default List<String> search(String text, String name) {
         List<String> searchHitList = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest(getIndex());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -64,7 +67,40 @@ public interface DocumentSearch {
             SearchHits searchHits = searchResponse.getHits();
             for (SearchHit hit : searchHits) {
                 searchHitList.add(hit.getSourceAsString());
-                System.out.println(hit.getScore());
+            }
+        } catch (IOException e){
+            getLogger().error(e);
+        }
+        return searchHitList;
+    }
+
+    default List<String> multiSearch(Map<String, String> textAndName) {
+        MultiSearchRequest request = new MultiSearchRequest();
+
+        for (Map.Entry<String, String> entry : textAndName.entrySet()) {
+            SearchRequest searchRequest = new SearchRequest();
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            QueryBuilder matchQueryBuilder = QueryBuilders
+                    .matchQuery(textAndName.get(entry.getKey()), entry.getKey())
+                    .fuzziness(Fuzziness.AUTO);
+            searchSourceBuilder.query(matchQueryBuilder).sort(new ScoreSortBuilder().order(SortOrder.DESC));
+            searchRequest.source(searchSourceBuilder);
+            request.add(searchRequest);
+        }
+
+        List<String> searchHitList = new ArrayList<>();
+
+        try {
+            MultiSearchResponse response = getConnection().getRestHighLevelClient()
+                    .msearch(request, RequestOptions.DEFAULT);
+            for (int i = 0; i < response.getResponses().length; i++) {
+                MultiSearchResponse.Item responseItem = response.getResponses()[i];
+                SearchResponse searchResponse = responseItem.getResponse();
+                SearchHits searchHits = searchResponse.getHits();
+
+                for (SearchHit hit : searchHits) {
+                    searchHitList.add(hit.getSourceAsString());
+                }
             }
         } catch (IOException e){
             getLogger().error(e);
