@@ -50,7 +50,7 @@ public interface ElasticsearchOperations {
      * @param object object to insert
      * @param id id of the inserted object
      */
-    default void insert(Object object, String id) {
+    default void insert(Object object, String id) throws ElasticsearchOperationsException {
         try {
             String jsonString = getMapper().writeValueAsString(object);
             IndexRequest indexRequest = new IndexRequest(getIndex())
@@ -59,6 +59,7 @@ public interface ElasticsearchOperations {
                     .index(indexRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
             getLogger().error(e);
+            throw new ElasticsearchOperationsException("Insert error", e);
         }
     }
 
@@ -68,7 +69,7 @@ public interface ElasticsearchOperations {
      * @param id searched JSON id
      * @return searched JSON as a String
      */
-    default String getById(String id) {
+    default String getById(String id) throws ElasticsearchOperationsException {
         GetRequest getRequest = new GetRequest(getIndex(), id);
         GetResponse getResponse = null;
         try {
@@ -76,6 +77,7 @@ public interface ElasticsearchOperations {
                     .get(getRequest, RequestOptions.DEFAULT);
         } catch (ElasticsearchException | IOException e) {
             getLogger().error(e);
+            throw new ElasticsearchOperationsException("Can't get by id using getById() method", e);
         }
         if (getResponse != null && getResponse.isExists()) {
             return getResponse.getSourceAsString();
@@ -89,13 +91,14 @@ public interface ElasticsearchOperations {
      *
      * @param id actual object's id
      */
-    default void deleteById(String id) {
+    default void deleteById(String id) throws ElasticsearchOperationsException {
         DeleteRequest deleteRequest = new DeleteRequest(getIndex(), id);
         try {
             DeleteResponse deleteResponse = getConnection().getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (IOException e){
             getLogger().error(e);
+            throw new ElasticsearchOperationsException("Error with deletion using deleteById() method", e);
         }
     }
 
@@ -105,7 +108,7 @@ public interface ElasticsearchOperations {
      * @param object object (model) to update
      * @param id actual object's (model's) id
      */
-    default void updateById(Object object, String id) {
+    default void updateById(Object object, String id) throws ElasticsearchOperationsException {
         try {
             String jsonString = getMapper().writeValueAsString(object);
             UpdateRequest updateRequest = new UpdateRequest(getIndex(), id)
@@ -114,6 +117,7 @@ public interface ElasticsearchOperations {
                     .update(updateRequest, RequestOptions.DEFAULT);
         } catch (IOException e){
             getLogger().error(e);
+            throw new ElasticsearchOperationsException("Can't update document using deleteById() method", e);
         }
     }
 }
