@@ -50,7 +50,7 @@ public interface DocumentSearch {
      * @param name the field name.
      * @return list of JSON-Strings (suitable objects)
      */
-    default List<String> search(String text, String name) {
+    default List<String> search(String text, String name) throws SearchException {
         List<String> searchHitList = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest(getIndex());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -70,6 +70,7 @@ public interface DocumentSearch {
             }
         } catch (IOException e){
             getLogger().error(e);
+            throw new SearchException("Search error using search() method", e);
         }
         return searchHitList;
     }
@@ -83,7 +84,7 @@ public interface DocumentSearch {
      * @param textAndName map of text to analyze and its corresponding field name.
      * @return list of JSON-Strings (suitable objects). It contains the results of all requests
      */
-    default List<String> multiSearch(Map<String, String> textAndName) {
+    default List<String> multiSearch(Map<String, String> textAndName) throws SearchException {
         MultiSearchRequest request = new MultiSearchRequest();
 
         for (Map.Entry<String, String> entry : textAndName.entrySet()) {
@@ -111,8 +112,9 @@ public interface DocumentSearch {
                     searchHitList.add(hit.getSourceAsString());
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             getLogger().error(e);
+            throw new SearchException("Search error using multiSearch() method", e);
         }
         return searchHitList;
     }
