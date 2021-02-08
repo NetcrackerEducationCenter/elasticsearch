@@ -15,6 +15,11 @@ public class JiraIssue {
     private String id;
 
     /**
+     * Provided data source
+     */
+    private String source;
+
+    /**
      * Title of the Jira-issue
      */
     private String issueTitle;
@@ -34,27 +39,31 @@ public class JiraIssue {
     }
 
     /**
-     * Creates a new Jira-issue with given title and issue body.
+     * Creates a new Jira-issue with given source, title and issue body.
      * ID is randomly created using UUID
      *
+     * @param source source of the Jira-issue's data
      * @param issueTitle title of the Jira-issue
      * @param issueBody body of the Jira-issue
      */
-    public JiraIssue(String issueTitle, String issueBody) {
+    public JiraIssue(String source, String issueTitle, String issueBody) {
         this.id = UUID.randomUUID().toString();
+        this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
     }
 
     /**
-     * Creates a new Jira-issue with given id, title and issue body.
+     * Creates a new Jira-issue with given id, source, title and issue body.
      *
      * @param id id of the Jira-issue
+     * @param source source of the Jira-issue's data
      * @param issueTitle title of the Jira-issue
      * @param issueBody body of the Jira-issue
      */
-    public JiraIssue(String id, String issueTitle, String issueBody) {
+    public JiraIssue(String id, String source, String issueTitle, String issueBody) {
         this.id = id;
+        this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
     }
@@ -71,6 +80,20 @@ public class JiraIssue {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return Jira-issue's source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source Jira-issue's source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 
     /**

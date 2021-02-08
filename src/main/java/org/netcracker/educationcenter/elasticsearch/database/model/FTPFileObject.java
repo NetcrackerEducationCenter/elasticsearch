@@ -16,6 +16,11 @@ public class FTPFileObject {
     private String id;
 
     /**
+     * Provided data source
+     */
+    private String source;
+
+    /**
      * FTP server name
      */
     private String server;
@@ -39,30 +44,34 @@ public class FTPFileObject {
     }
 
     /**
-     * Creates a new FTP file object with given server, text and date of modification.
+     * Creates a new FTP file object with given source, server, text and date of modification.
      * ID is randomly created using UUID
      *
+     * @param source source of the FTP file object's data
      * @param server server name of the FTP file object
      * @param text text of the FTP file object
      * @param modificationDate FTP file object modification date
      */
-    public FTPFileObject(String server, String text, LocalDate modificationDate) {
+    public FTPFileObject(String source, String server, String text, LocalDate modificationDate) {
         this.id = UUID.randomUUID().toString();
+        this.source = source;
         this.server = server;
         this.text = text;
         this.modificationDate = modificationDate;
     }
 
     /**
-     * Creates a new FTP file object with given id, server, text and date of modification
+     * Creates a new FTP file object with given id, source, server, text and date of modification
      *
      * @param id id of the FTP file object
+     * @param source source of the FTP file object's data
      * @param server server name of the FTP file object
      * @param text text of the FTP file object
      * @param modificationDate FTP file object modification date
      */
-    public FTPFileObject(String id, String server, String text, LocalDate modificationDate) {
+    public FTPFileObject(String id, String source, String server, String text, LocalDate modificationDate) {
       this.id = id;
+      this.source = source;
       this.server = server;
       this.text = text;
       this.modificationDate = modificationDate;
@@ -80,6 +89,20 @@ public class FTPFileObject {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return FTP file object source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source FTP file object's source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 
     /**
