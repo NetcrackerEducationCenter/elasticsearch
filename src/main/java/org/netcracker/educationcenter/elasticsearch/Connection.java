@@ -20,6 +20,11 @@ public class Connection implements AutoCloseable {
     private static final Logger LOG = LogManager.getLogger();
 
     /**
+     * Properties instance to load properties from connection.properties using method loadProperties()
+     */
+    private static Properties properties;
+
+    /**
      * High-level client instance to establish connection
      */
     private RestHighLevelClient restHighLevelClient;
@@ -27,22 +32,22 @@ public class Connection implements AutoCloseable {
     /**
      * Elasticsearch hostname
      */
-    private String hostname;
+    private static final String hostname = properties.getProperty("hostname");
 
     /**
      * The name of the scheme.
      */
-    private String scheme;
+    private static final String scheme = properties.getProperty("scheme");
 
     /**
      * First port number.
      */
-    private int port1;
+    private static final int port1 = Integer.parseInt(properties.getProperty("port1"));
 
     /**
      * Second port number
      */
-    private int port2;
+    private static final int port2 = Integer.parseInt(properties.getProperty("port2"));
 
     /**
      * A constructor which is used to load properties and make a connection with Elasticsearch
@@ -59,18 +64,14 @@ public class Connection implements AutoCloseable {
     }
 
     /**
-     * This method loads properties from connection.properties and initializes property fields such as
-     * hostname, scheme, port1 and port2
+     * This method loads properties from connection.properties to initialize property fields such as
+     * hostname, scheme, port1 and port2 later
      */
     private void loadProperties() {
-        Properties properties = new Properties();
+        properties = new Properties();
 
         try (InputStream inputStream = getClass().getResourceAsStream("connection.properties")) {
             properties.load(inputStream);
-            hostname = properties.getProperty("hostname");
-            scheme = properties.getProperty("scheme");
-            port1 = Integer.parseInt(properties.getProperty("port1"));
-            port2 = Integer.parseInt(properties.getProperty("port2"));
         } catch (IOException e) {
             LOG.error(e);
         }
