@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -65,8 +65,8 @@ public class Connection implements AutoCloseable {
     private void loadProperties() {
         Properties properties = new Properties();
 
-        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/connection.properties")) {
-            properties.load(fileInputStream);
+        try (InputStream inputStream = getClass().getResourceAsStream("connection.properties")) {
+            properties.load(inputStream);
             hostname = properties.getProperty("hostname");
             scheme = properties.getProperty("scheme");
             port1 = Integer.parseInt(properties.getProperty("port1"));
