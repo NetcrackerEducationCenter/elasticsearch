@@ -1,7 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -23,11 +22,6 @@ import java.io.IOException;
  * @author Mikhail Savin
  */
 public interface ElasticsearchOperations {
-
-    /**
-     * @return current logger instance
-     */
-    Logger getLogger();
 
     /**
      * @return JSON object mapper
@@ -58,7 +52,6 @@ public interface ElasticsearchOperations {
             IndexResponse indexResponse = getConnection().getRestHighLevelClient()
                     .index(indexRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
-            getLogger().error(e);
             throw new ElasticsearchOperationsException("Insert error", e);
         }
     }
@@ -71,12 +64,11 @@ public interface ElasticsearchOperations {
      */
     default String getById(String id) throws ElasticsearchOperationsException {
         GetRequest getRequest = new GetRequest(getIndex(), id);
-        GetResponse getResponse = null;
+        GetResponse getResponse;
         try {
             getResponse = getConnection().getRestHighLevelClient()
                     .get(getRequest, RequestOptions.DEFAULT);
         } catch (ElasticsearchException | IOException e) {
-            getLogger().error(e);
             throw new ElasticsearchOperationsException("Can't get by id using getById() method", e);
         }
         if (getResponse != null && getResponse.isExists()) {
@@ -97,7 +89,6 @@ public interface ElasticsearchOperations {
             DeleteResponse deleteResponse = getConnection().getRestHighLevelClient()
                     .delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (IOException e){
-            getLogger().error(e);
             throw new ElasticsearchOperationsException("Error with deletion using deleteById() method", e);
         }
     }
@@ -112,11 +103,10 @@ public interface ElasticsearchOperations {
         try {
             String jsonString = getMapper().writeValueAsString(object);
             UpdateRequest updateRequest = new UpdateRequest(getIndex(), id)
-                    .doc(jsonString, XContentType.JSON).fetchSource(true); // is fetchSource(true) really needed?
+                    .doc(jsonString, XContentType.JSON).fetchSource(true);
             UpdateResponse updateResponse = getConnection().getRestHighLevelClient()
                     .update(updateRequest, RequestOptions.DEFAULT);
         } catch (IOException e){
-            getLogger().error(e);
             throw new ElasticsearchOperationsException("Can't update document using deleteById() method", e);
         }
     }
