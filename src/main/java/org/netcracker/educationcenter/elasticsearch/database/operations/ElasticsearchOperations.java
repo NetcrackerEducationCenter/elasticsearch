@@ -1,6 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -15,6 +16,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Interface for Elasticsearch Database operations (Insert, Get, Delete, Update)
@@ -62,19 +64,19 @@ public interface ElasticsearchOperations {
      * @param id searched JSON id
      * @return searched JSON as a String
      */
-    default String getById(String id) throws ElasticsearchOperationsException {
+    default Optional<JsonNode> getById(String id) throws ElasticsearchOperationsException {
         GetRequest getRequest = new GetRequest(getIndex(), id);
         GetResponse getResponse;
         try {
             getResponse = getConnection().getRestHighLevelClient()
                     .get(getRequest, RequestOptions.DEFAULT);
+            if (getResponse != null && getResponse.isExists()) {
+                return Optional.of(getMapper().readTree(getResponse.getSourceAsString()));
+            } else {
+                return Optional.empty();
+            }
         } catch (ElasticsearchException | IOException e) {
             throw new ElasticsearchOperationsException("Can't get by id using getById() method", e);
-        }
-        if (getResponse != null && getResponse.isExists()) {
-            return getResponse.getSourceAsString();
-        } else {
-            return "Document was not found";
         }
     }
 
