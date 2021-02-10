@@ -1,7 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -59,7 +59,7 @@ public interface ElasticsearchOperations {
     }
 
     /**
-     * Gets Optional of JsonNode (which can be empty) by id.
+     * Gets Optional of model's JsonNode (which can be empty) by id.
      *
      * @param id searched JSON id
      * @return Optional object (empty if not found)
