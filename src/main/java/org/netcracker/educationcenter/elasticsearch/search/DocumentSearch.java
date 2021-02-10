@@ -14,7 +14,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import org.netcracker.educationcenter.elasticsearch.Connection;
+import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,11 +27,6 @@ import java.util.Map;
  * @author Mikhail Savin
  */
 public interface DocumentSearch {
-
-    /**
-     * @return current logger instance
-     */
-    Logger getLogger();
 
     /**
      * @return current connection instance
@@ -56,8 +51,6 @@ public interface DocumentSearch {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
                 .fuzziness(Fuzziness.AUTO);
-                //.prefixLength(1)
-                //.maxExpansions(10);
         searchSourceBuilder.query(matchQueryBuilder).sort(new ScoreSortBuilder().order(SortOrder.DESC));
         searchRequest.source(searchSourceBuilder);
 
@@ -69,7 +62,6 @@ public interface DocumentSearch {
                 searchHitList.add(hit.getSourceAsString());
             }
         } catch (IOException e){
-            getLogger().error(e);
             throw new SearchException("Search error using search() method", e);
         }
         return searchHitList;
@@ -113,7 +105,6 @@ public interface DocumentSearch {
                 }
             }
         } catch (IOException e) {
-            getLogger().error(e);
             throw new SearchException("Search error using multiSearch() method", e);
         }
         return searchHitList;

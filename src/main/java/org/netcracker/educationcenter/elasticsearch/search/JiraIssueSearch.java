@@ -2,10 +2,8 @@ package org.netcracker.educationcenter.elasticsearch.search;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.netcracker.educationcenter.elasticsearch.Connection;
+import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
-
-import java.util.List;
 
 /**
  * This class implements Elasticsearch search on Jira-issues
@@ -28,14 +26,6 @@ public class JiraIssueSearch implements DocumentSearch {
      */
     public JiraIssueSearch(Connection connection) {
         this.connection = connection;
-    }
-
-    /**
-     * @return current logger instance
-     */
-    @Override
-    public Logger getLogger() {
-        return LOG;
     }
 
     /**
