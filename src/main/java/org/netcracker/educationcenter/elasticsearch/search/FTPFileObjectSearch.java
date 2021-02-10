@@ -12,7 +12,6 @@ import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
  * @see DocumentSearch
  */
 public class FTPFileObjectSearch implements DocumentSearch {
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Current connection instance
