@@ -40,7 +40,64 @@ public class Connection implements AutoCloseable {
     private int port2;
 
     /**
-     * A constructor which is used to load properties and make a connection with Elasticsearch
+     * @return hostname (ip of the server)
+     */
+    public String getHostname() {
+        return hostname;
+    }
+
+    /**
+     * @param hostname hostname to set
+     */
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    /**
+     * @return connection scheme (e.g. http)
+     */
+    public String getScheme() {
+        return scheme;
+    }
+
+    /**
+     * @param scheme scheme to set
+     */
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+
+    /**
+     * @return first connection port
+     */
+    public int getPort1() {
+        return port1;
+    }
+
+    /**
+     * @param port1 first port to set
+     */
+    public void setPort1(int port1) {
+        this.port1 = port1;
+    }
+
+    /**
+     * @return second connection port
+     */
+    public int getPort2() {
+        return port2;
+    }
+
+    /**
+     * @param port2 second port to set
+     */
+    public void setPort2(int port2) {
+        this.port2 = port2;
+    }
+
+    /**
+     * A constructor which is used to make a connection with Elasticsearch using connection properties
+     * (hostname, scheme, first port, second port)
      *
      * @param properties connection properties
      */
