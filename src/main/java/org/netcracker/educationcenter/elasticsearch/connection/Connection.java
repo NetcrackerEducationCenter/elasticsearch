@@ -1,13 +1,9 @@
-package org.netcracker.educationcenter.elasticsearch;
+package org.netcracker.educationcenter.elasticsearch.connection;
 
 import org.apache.http.HttpHost;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -17,12 +13,6 @@ import java.util.Properties;
  * @author Mikhail Savin
  */
 public class Connection implements AutoCloseable {
-    private static final Logger LOG = LogManager.getLogger();
-
-    /**
-     * Properties instance to load properties from connection.properties using method loadProperties()
-     */
-    private static Properties properties;
 
     /**
      * High-level client instance to establish connection
@@ -32,28 +22,33 @@ public class Connection implements AutoCloseable {
     /**
      * Elasticsearch hostname
      */
-    private static final String hostname = properties.getProperty("hostname");
+    private String hostname;
 
     /**
      * The name of the scheme.
      */
-    private static final String scheme = properties.getProperty("scheme");
+    private String scheme;
 
     /**
      * First port number.
      */
-    private static final int port1 = Integer.parseInt(properties.getProperty("port1"));
+    private int port1;
 
     /**
-     * Second port number
+     * Second port number.
      */
-    private static final int port2 = Integer.parseInt(properties.getProperty("port2"));
+    private int port2;
 
     /**
      * A constructor which is used to load properties and make a connection with Elasticsearch
+     *
+     * @param properties connection properties
      */
-    public Connection() {
-        loadProperties();
+    public Connection(Properties properties) {
+        this.hostname = properties.getProperty(ConnectionConstants.HOSTNAME_PROPERTY_NAME);
+        this.scheme = properties.getProperty(ConnectionConstants.SCHEME_PROPERTY_NAME);
+        this.port1 = Integer.parseInt(properties.getProperty(ConnectionConstants.PORT1_PROPERTY_NAME));
+        this.port2 = Integer.parseInt(properties.getProperty(ConnectionConstants.PORT2_PROPERTY_NAME));
     }
 
     /**
@@ -61,20 +56,6 @@ public class Connection implements AutoCloseable {
      */
     public RestHighLevelClient getRestHighLevelClient() {
         return restHighLevelClient;
-    }
-
-    /**
-     * This method loads properties from connection.properties to initialize property fields such as
-     * hostname, scheme, port1 and port2 later
-     */
-    private void loadProperties() {
-        properties = new Properties();
-
-        try (InputStream inputStream = getClass().getResourceAsStream("connection.properties")) {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            LOG.error(e);
-        }
     }
 
     /**
