@@ -1,7 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.netcracker.educationcenter.elasticsearch.Connection;
+import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
