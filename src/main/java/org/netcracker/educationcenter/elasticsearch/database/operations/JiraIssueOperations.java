@@ -20,7 +20,7 @@ public class JiraIssueOperations implements ElasticsearchOperations {
     /**
      * JSON object mapper
      */
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     /**
      * Creates a new JiraIssueOperations instance with given connection to interact with ES DB.
