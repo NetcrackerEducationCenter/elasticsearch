@@ -1,9 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.netcracker.educationcenter.elasticsearch.Connection;
+import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
@@ -13,7 +11,6 @@ import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
  * @see ElasticsearchOperations
  */
 public class FTPFileObjectOperations implements ElasticsearchOperations {
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Current connection instance
@@ -33,14 +30,6 @@ public class FTPFileObjectOperations implements ElasticsearchOperations {
     public FTPFileObjectOperations(Connection connection) {
         this.mapper = new ObjectMapper();
         this.connection = connection;
-    }
-
-    /**
-     * @return current logger instance
-     */
-    @Override
-    public Logger getLogger() {
-        return LOG;
     }
 
     /**
