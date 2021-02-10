@@ -59,10 +59,10 @@ public interface ElasticsearchOperations {
     }
 
     /**
-     * Gets model's JSON as a String by its id.
+     * Gets Optional of JsonNode (which can be empty) by id.
      *
      * @param id searched JSON id
-     * @return searched JSON as a String
+     * @return Optional object (empty if not found)
      */
     default Optional<JsonNode> getById(String id) throws ElasticsearchOperationsException {
         GetRequest getRequest = new GetRequest(getIndex(), id);
