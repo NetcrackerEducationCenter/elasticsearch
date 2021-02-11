@@ -1,7 +1,6 @@
 package org.netcracker.educationcenter.elasticsearch.search;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.netcracker.educationcenter.elasticsearch.connection.Connection;
 import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
@@ -19,11 +18,17 @@ public class JiraIssueSearch implements DocumentSearch {
     private final Connection connection;
 
     /**
+     * JSON object mapper
+     */
+    private final ObjectMapper mapper;
+
+    /**
      * Creates a new JiraIssueSearch instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
     public JiraIssueSearch(Connection connection) {
+        this.mapper = new ObjectMapper();
         this.connection = connection;
     }
 
@@ -33,6 +38,14 @@ public class JiraIssueSearch implements DocumentSearch {
     @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    /**
+     * @return JSON object mapper
+     */
+    @Override
+    public ObjectMapper getMapper() {
+        return mapper;
     }
 
     /**

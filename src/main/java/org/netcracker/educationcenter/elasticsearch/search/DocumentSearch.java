@@ -1,6 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.search;
 
-import org.apache.logging.log4j.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.MultiSearchRequest;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -29,6 +30,11 @@ import java.util.Map;
 public interface DocumentSearch {
 
     /**
+     * @return JSON object mapper
+     */
+    ObjectMapper getMapper();
+
+    /**
      * @return current connection instance
      */
     Connection getConnection();
@@ -45,8 +51,8 @@ public interface DocumentSearch {
      * @param name the field name.
      * @return list of JSON-Strings (suitable objects)
      */
-    default List<String> search(String text, String name) throws SearchException {
-        List<String> searchHitList = new ArrayList<>();
+    default List<JsonNode> search(String text, String name) throws SearchException {
+        List<JsonNode> searchHitList = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest(getIndex());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
@@ -59,7 +65,7 @@ public interface DocumentSearch {
                     .search(searchRequest, RequestOptions.DEFAULT);
             SearchHits searchHits = searchResponse.getHits();
             for (SearchHit hit : searchHits) {
-                searchHitList.add(hit.getSourceAsString());
+                searchHitList.add(getMapper().readTree(hit.getSourceAsString()));
             }
         } catch (IOException e){
             throw new SearchException("Search error using search() method", e);
