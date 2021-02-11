@@ -49,7 +49,7 @@ public interface DocumentSearch {
      *
      * @param text the query text (to be analyzed).
      * @param name the field name.
-     * @return list of JSON-Strings (suitable objects)
+     * @return list of JsonNodes (suitable objects)
      */
     default List<JsonNode> search(String text, String name) throws SearchException {
         List<JsonNode> searchHitList = new ArrayList<>();
@@ -80,9 +80,9 @@ public interface DocumentSearch {
      * has only one parameter which is represented as a map of text and field name.
      *
      * @param textAndName map of text to analyze and its corresponding field name.
-     * @return list of JSON-Strings (suitable objects). It contains the results of all requests
+     * @return list of JsonNodes (suitable objects). It contains the results of all requests
      */
-    default List<String> multiSearch(Map<String, String> textAndName) throws SearchException {
+    default List<JsonNode> multiSearch(Map<String, String> textAndName) throws SearchException {
         MultiSearchRequest request = new MultiSearchRequest();
 
         for (Map.Entry<String, String> entry : textAndName.entrySet()) {
@@ -96,7 +96,7 @@ public interface DocumentSearch {
             request.add(searchRequest);
         }
 
-        List<String> searchHitList = new ArrayList<>();
+        List<JsonNode> searchHitList = new ArrayList<>();
 
         try {
             MultiSearchResponse response = getConnection().getRestHighLevelClient()
@@ -107,7 +107,7 @@ public interface DocumentSearch {
                 SearchHits searchHits = searchResponse.getHits();
 
                 for (SearchHit hit : searchHits) {
-                    searchHitList.add(hit.getSourceAsString());
+                    searchHitList.add(getMapper().readTree(hit.getSourceAsString()));
                 }
             }
         } catch (IOException e) {
