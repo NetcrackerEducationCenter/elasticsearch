@@ -1,5 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.model;
 
+import org.netcracker.educationcenter.elasticsearch.enums.ModelType;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -19,6 +21,11 @@ public class FTPFileObject {
      * Provided data source
      */
     private String source;
+
+    /**
+     * Type of the object (metadata field)
+     */
+    private ModelType type;
 
     /**
      * FTP server name
@@ -41,6 +48,7 @@ public class FTPFileObject {
      */
     public FTPFileObject() {
         this.id = UUID.randomUUID().toString();
+        this.type = ModelType.FTP_FILE;
     }
 
     /**
@@ -58,6 +66,7 @@ public class FTPFileObject {
         this.server = server;
         this.text = text;
         this.modificationDate = modificationDate;
+        this.type = ModelType.FTP_FILE;
     }
 
     /**
@@ -75,6 +84,7 @@ public class FTPFileObject {
       this.server = server;
       this.text = text;
       this.modificationDate = modificationDate;
+      this.type = ModelType.FTP_FILE;
     }
 
     /**
@@ -103,6 +113,20 @@ public class FTPFileObject {
      */
     public void setSource(String source) {
         this.source = source;
+    }
+
+    /**
+     * @return type of the model (ModelType.FTP_FILE by default)
+     */
+    public ModelType getType() {
+        return type;
+    }
+
+    /**
+     * @param modelType FTP file object's model type to set
+     */
+    public void setType(ModelType modelType) {
+        this.type = modelType;
     }
 
     /**

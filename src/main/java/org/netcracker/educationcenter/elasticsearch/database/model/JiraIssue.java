@@ -1,5 +1,7 @@
 package org.netcracker.educationcenter.elasticsearch.database.model;
 
+import org.netcracker.educationcenter.elasticsearch.enums.ModelType;
+
 import java.util.UUID;
 
 /**
@@ -20,6 +22,11 @@ public class JiraIssue {
     private String source;
 
     /**
+     * Type of the object (metadata field)
+     */
+    private ModelType type;
+
+    /**
      * Title of the Jira-issue
      */
     private String issueTitle;
@@ -36,6 +43,7 @@ public class JiraIssue {
      */
     public JiraIssue() {
         this.id = UUID.randomUUID().toString();
+        this.type = ModelType.JIRA_ISSUE;
     }
 
     /**
@@ -51,6 +59,7 @@ public class JiraIssue {
         this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
+        this.type = ModelType.JIRA_ISSUE;
     }
 
     /**
@@ -66,6 +75,7 @@ public class JiraIssue {
         this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
+        this.type = ModelType.JIRA_ISSUE;
     }
 
     /**
@@ -94,6 +104,20 @@ public class JiraIssue {
      */
     public void setSource(String source) {
         this.source = source;
+    }
+
+    /**
+     * @return type of the model (ModelType.JIRA_ISSUE by default)
+     */
+    public ModelType getType() {
+        return type;
+    }
+
+    /**
+     * @param modelType Jira-issue's model type to set
+     */
+    public void setType(ModelType modelType) {
+        this.type = modelType;
     }
 
     /**
