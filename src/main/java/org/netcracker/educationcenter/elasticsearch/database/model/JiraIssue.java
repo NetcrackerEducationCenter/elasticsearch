@@ -117,7 +117,7 @@ public class JiraIssue {
     }
 
     /**
-     * @return type of the model (ModelType.JIRA_ISSUE by default)
+     * @return type of the model (ModelType.TICKET by default)
      */
     public ModelType getType() {
         return type;

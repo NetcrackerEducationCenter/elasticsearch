@@ -116,7 +116,7 @@ public class FTPFileObject {
     }
 
     /**
-     * @return type of the model (ModelType.FTP_FILE by default)
+     * @return type of the model (ModelType.FILE by default)
      */
     public ModelType getType() {
         return type;
