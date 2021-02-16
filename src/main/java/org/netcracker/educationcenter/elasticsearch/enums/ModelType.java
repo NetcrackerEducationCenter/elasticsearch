@@ -8,12 +8,12 @@ package org.netcracker.educationcenter.elasticsearch.enums;
 public enum ModelType {
 
     /**
-     * Jira issue model type
+     * Ticket (e.g. Jira)
      */
-    JIRA_ISSUE,
+    TICKET,
 
     /**
-     * FTP file model type
+     * File (e.g. FTP server file)
      */
-    FTP_FILE
+    FILE
 }
