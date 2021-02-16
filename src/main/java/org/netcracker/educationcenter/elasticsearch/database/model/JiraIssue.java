@@ -49,7 +49,7 @@ public class JiraIssue {
      */
     public JiraIssue() {
         this.id = UUID.randomUUID().toString();
-        this.type = ModelType.JIRA_ISSUE;
+        this.type = ModelType.TICKET;
     }
 
     /**
@@ -67,7 +67,7 @@ public class JiraIssue {
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
         this.comments = comments;
-        this.type = ModelType.JIRA_ISSUE;
+        this.type = ModelType.TICKET;
     }
 
     /**
@@ -85,7 +85,7 @@ public class JiraIssue {
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
         this.comments = comments;
-        this.type = ModelType.JIRA_ISSUE;
+        this.type = ModelType.TICKET;
     }
 
     /**

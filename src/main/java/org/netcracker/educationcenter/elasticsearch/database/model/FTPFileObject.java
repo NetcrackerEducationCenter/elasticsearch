@@ -48,7 +48,7 @@ public class FTPFileObject {
      */
     public FTPFileObject() {
         this.id = UUID.randomUUID().toString();
-        this.type = ModelType.FTP_FILE;
+        this.type = ModelType.FILE;
     }
 
     /**
@@ -66,7 +66,7 @@ public class FTPFileObject {
         this.server = server;
         this.text = text;
         this.modificationDate = modificationDate;
-        this.type = ModelType.FTP_FILE;
+        this.type = ModelType.FILE;
     }
 
     /**
@@ -84,7 +84,7 @@ public class FTPFileObject {
       this.server = server;
       this.text = text;
       this.modificationDate = modificationDate;
-      this.type = ModelType.FTP_FILE;
+      this.type = ModelType.FILE;
     }
 
     /**
