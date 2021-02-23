@@ -18,6 +18,12 @@ public class FTPFileObject {
     private String id;
 
     /**
+     * ID of the request for which this FTPFileObject object was assigned.
+     * With the help of this ID, other services will know which objects are needed.
+     */
+    private String requestId;
+
+    /**
      * Provided data source
      */
     private String source;
@@ -44,7 +50,7 @@ public class FTPFileObject {
 
     /**
      * Creates a new FTP file object.
-     * ID is randomly created using UUID
+     * FTPFileObject ID is randomly created using UUID
      */
     public FTPFileObject() {
         this.id = UUID.randomUUID().toString();
@@ -52,16 +58,18 @@ public class FTPFileObject {
     }
 
     /**
-     * Creates a new FTP file object with given source, server, text and date of modification.
+     * Creates a new FTP file object with given request ID, source, server, text and date of modification.
      * ID is randomly created using UUID
      *
+     * @param requestId ID of the current request
      * @param source source of the FTP file object's data
      * @param server server name of the FTP file object
      * @param text text of the FTP file object
      * @param modificationDate FTP file object modification date
      */
-    public FTPFileObject(String source, String server, String text, LocalDate modificationDate) {
+    public FTPFileObject(String requestId, String source, String server, String text, LocalDate modificationDate) {
         this.id = UUID.randomUUID().toString();
+        this.requestId = requestId;
         this.source = source;
         this.server = server;
         this.text = text;
@@ -70,16 +78,18 @@ public class FTPFileObject {
     }
 
     /**
-     * Creates a new FTP file object with given id, source, server, text and date of modification
+     * Creates a new FTP file object with given FTPFileObject id, request id, source, server, text and date of modification
      *
      * @param id id of the FTP file object
+     * @param requestId id of the current request
      * @param source source of the FTP file object's data
      * @param server server name of the FTP file object
      * @param text text of the FTP file object
      * @param modificationDate FTP file object modification date
      */
-    public FTPFileObject(String id, String source, String server, String text, LocalDate modificationDate) {
+    public FTPFileObject(String id, String requestId, String source, String server, String text, LocalDate modificationDate) {
       this.id = id;
+      this.requestId = requestId;
       this.source = source;
       this.server = server;
       this.text = text;
@@ -99,6 +109,20 @@ public class FTPFileObject {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return current request id
+     */
+    public String getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * @param requestId current request id to set
+     */
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     /**
