@@ -18,6 +18,12 @@ public class JiraIssue {
     private String id;
 
     /**
+     * ID of the request for which this JiraIssue object was assigned.
+     * With the help of this ID, other services will know which objects are needed.
+     */
+    private String requestId;
+
+    /**
      * Provided data source
      */
     private String source;
@@ -53,16 +59,18 @@ public class JiraIssue {
     }
 
     /**
-     * Creates a new Jira-issue with given source, title, issue body and comments.
-     * ID is randomly created using UUID
+     * Creates a new Jira-issue with given request id, source, title, issue body and comments.
+     * JiraIssue ID is randomly created using UUID
      *
+     * @param requestId id of the current request
      * @param source source of the Jira-issue's data
      * @param issueTitle title of the Jira-issue
      * @param issueBody body of the Jira-issue
      * @param comments all comments of the Jira-issue
      */
-    public JiraIssue(String source, String issueTitle, String issueBody, List<String> comments) {
+    public JiraIssue(String requestId, String source, String issueTitle, String issueBody, List<String> comments) {
         this.id = UUID.randomUUID().toString();
+        this.requestId = requestId;
         this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
@@ -71,16 +79,18 @@ public class JiraIssue {
     }
 
     /**
-     * Creates a new Jira-issue with given id, source, title, issue body and comments.
+     * Creates a new Jira-issue with given JiraIssue id, request id, source, title, issue body and comments.
      *
      * @param id id of the Jira-issue
+     * @param requestId id of the current request
      * @param source source of the Jira-issue's data
      * @param issueTitle title of the Jira-issue
      * @param issueBody body of the Jira-issue
      * @param comments all comments of the Jira-issue
      */
-    public JiraIssue(String id, String source, String issueTitle, String issueBody, List<String> comments) {
+    public JiraIssue(String id, String requestId, String source, String issueTitle, String issueBody, List<String> comments) {
         this.id = id;
+        this.requestId = requestId;
         this.source = source;
         this.issueTitle = issueTitle;
         this.issueBody = issueBody;
@@ -100,6 +110,20 @@ public class JiraIssue {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * @return current request id
+     */
+    public String getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * @param requestId current request id to set
+     */
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     /**
