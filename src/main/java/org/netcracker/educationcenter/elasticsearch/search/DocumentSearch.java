@@ -8,6 +8,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -50,6 +51,7 @@ public interface DocumentSearch {
      * @param text the query text (to be analyzed).
      * @param name the field name.
      * @return list of JsonNodes (suitable objects)
+     * @throws SearchException if something went wrong while searching
      */
     default List<JsonNode> search(String text, String name) throws SearchException {
         List<JsonNode> searchHitList = new ArrayList<>();
@@ -81,6 +83,7 @@ public interface DocumentSearch {
      *
      * @param textAndName map of text to analyze and its corresponding field name.
      * @return list of JsonNodes (suitable objects). It contains the results of all requests
+     * @throws SearchException if something went wrong while searching
      */
     default List<JsonNode> multiSearch(Map<String, String> textAndName) throws SearchException {
         MultiSearchRequest request = new MultiSearchRequest();
@@ -112,6 +115,38 @@ public interface DocumentSearch {
             }
         } catch (IOException e) {
             throw new SearchException("Search error using multiSearch() method", e);
+        }
+        return searchHitList;
+    }
+
+    /**
+     * Searches all matching objects by index and field name which matches exactly with the given text
+     *
+     * @param text the text to be matched
+     * @param name the field name.
+     * @return list of JsonNodes (suitable objects)
+     * @throws SearchException if something went wrong while searching
+     */
+    default List<JsonNode> searchByField(String text, String name) throws SearchException {
+        List<JsonNode> searchHitList = new ArrayList<>();
+        SearchRequest searchRequest = new SearchRequest(getIndex());
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
+                .fuzziness(Fuzziness.AUTO);
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.filter(matchQueryBuilder);
+        searchSourceBuilder.query(boolQueryBuilder).sort(new ScoreSortBuilder().order(SortOrder.DESC));
+        searchRequest.source(searchSourceBuilder);
+
+        try {
+            SearchResponse searchResponse = getConnection().getRestHighLevelClient()
+                    .search(searchRequest, RequestOptions.DEFAULT);
+            SearchHits searchHits = searchResponse.getHits();
+            for (SearchHit hit : searchHits) {
+                searchHitList.add(getMapper().readTree(hit.getSourceAsString()));
+            }
+        } catch (IOException e){
+            throw new SearchException("Search error using search() method", e);
         }
         return searchHitList;
     }
