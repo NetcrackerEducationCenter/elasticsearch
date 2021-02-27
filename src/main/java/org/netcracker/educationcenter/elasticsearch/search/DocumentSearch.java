@@ -127,7 +127,7 @@ public interface DocumentSearch {
      * @return list of JsonNodes (suitable objects)
      * @throws SearchException if something went wrong while searching
      */
-    default List<JsonNode> searchByField(String text, String name) throws SearchException {
+    default List<JsonNode> searchByFieldValue(String text, String name) throws SearchException {
         List<JsonNode> searchHitList = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest(getIndex());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
