@@ -2,15 +2,14 @@ package org.netcracker.educationcenter.elasticsearch.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.netcracker.educationcenter.elasticsearch.connection.Connection;
-import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
- * This class implements Elasticsearch search on FTP file objects
+ * This class implements Elasticsearch search on document models
  *
  * @author Mikhail Savin
  * @see DocumentSearch
  */
-public class FTPFileObjectSearch implements DocumentSearch {
+public class DocumentModelSearch implements DocumentSearch {
 
     /**
      * Current connection instance
@@ -23,11 +22,11 @@ public class FTPFileObjectSearch implements DocumentSearch {
     private final ObjectMapper mapper;
 
     /**
-     * Creates a new FTPFileObjectSearch instance with given connection to interact with ES DB.
+     * Creates a new DocumentModelSearch instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
-    public FTPFileObjectSearch(Connection connection) {
+    public DocumentModelSearch(Connection connection) {
         this.mapper = new ObjectMapper();
         this.connection = connection;
     }
@@ -46,13 +45,5 @@ public class FTPFileObjectSearch implements DocumentSearch {
     @Override
     public ObjectMapper getMapper() {
         return mapper;
-    }
-
-    /**
-     * @return FTP file object model's index
-     */
-    @Override
-    public String getIndex() {
-        return DatabaseConstants.FTP_FILE_OBJECTS_INDEX;
     }
 }

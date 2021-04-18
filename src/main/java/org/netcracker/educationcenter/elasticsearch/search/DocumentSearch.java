@@ -41,21 +41,17 @@ public interface DocumentSearch {
     Connection getConnection();
 
     /**
-     * @return index of the sought object
-     */
-    String getIndex();
-
-    /**
      * Searches all matching objects by index and field name which satisfy the text search
      *
      * @param text the query text (to be analyzed).
      * @param name the field name.
+     * @param index the index where the document is located
      * @return list of JsonNodes (suitable objects)
      * @throws SearchException if something went wrong while searching
      */
-    default List<JsonNode> search(String text, String name) throws SearchException {
+    default List<JsonNode> search(String text, String name, String index) throws SearchException {
         List<JsonNode> searchHitList = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest(getIndex());
+        SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
                 .fuzziness(Fuzziness.AUTO);
@@ -124,12 +120,13 @@ public interface DocumentSearch {
      *
      * @param text the text to be matched
      * @param name the field name.
+     * @param index the index where the document is located
      * @return list of JsonNodes (suitable objects)
      * @throws SearchException if something went wrong while searching
      */
-    default List<JsonNode> searchByFieldValue(String text, String name) throws SearchException {
+    default List<JsonNode> searchByFieldValue(String text, String name, String index) throws SearchException {
         List<JsonNode> searchHitList = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest(getIndex());
+        SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
                 .fuzziness(Fuzziness.AUTO);

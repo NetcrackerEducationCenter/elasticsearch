@@ -1,16 +1,17 @@
 package org.netcracker.educationcenter.elasticsearch.database.operations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.netcracker.educationcenter.elasticsearch.connection.Connection;
-import org.netcracker.educationcenter.elasticsearch.database.DatabaseConstants;
 
 /**
- * This class implements Elasticsearch Database operations with (on) Jira-issues
+ * This class implements Elasticsearch Database operations with (on) documents (objects of supported sources)
  *
  * @author Mikhail Savin
  * @see ElasticsearchOperations
  */
-public class JiraIssueOperations implements ElasticsearchOperations {
+public class DocumentModelOperations implements ElasticsearchOperations {
 
     /**
      * Current connection instance
@@ -23,12 +24,14 @@ public class JiraIssueOperations implements ElasticsearchOperations {
     private final ObjectMapper mapper;
 
     /**
-     * Creates a new JiraIssueOperations instance with given connection to interact with ES DB.
+     * Creates a new DocumentOperations instance with given connection to interact with ES DB.
      *
      * @param connection current connection
      */
-    public JiraIssueOperations(Connection connection) {
+    public DocumentModelOperations(Connection connection) {
         this.mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         this.connection = connection;
     }
 
@@ -46,13 +49,5 @@ public class JiraIssueOperations implements ElasticsearchOperations {
     @Override
     public Connection getConnection() {
         return connection;
-    }
-
-    /**
-     * @return Jira-issue model's index
-     */
-    @Override
-    public String getIndex() {
-        return DatabaseConstants.JIRA_ISSUES_INDEX;
     }
 }
