@@ -129,7 +129,7 @@ public interface DocumentSearch {
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(name, text)
-                .fuzziness(Fuzziness.AUTO);
+                .fuzziness(0);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.filter(matchQueryBuilder);
         searchSourceBuilder.query(boolQueryBuilder).sort(new ScoreSortBuilder().order(SortOrder.DESC));
